@@ -188,8 +188,8 @@ void Adafruit_USBD_Device::clearConfiguration(void) {
   // Note: Total Length Interface Number will be updated later
   uint8_t const dev_cfg[sizeof(tusb_desc_configuration_t)] = {
       TUD_CONFIG_DESCRIPTOR(1, 0, 0, sizeof(tusb_desc_configuration_t),
-                            TUSB_DESC_CONFIG_ATT_REMOTE_WAKEUP | TU_BIT(7),
-                            100),
+                            TUSB_DESC_CONFIG_ATT_SELF_POWERED | TUSB_DESC_CONFIG_ATT_REMOTE_WAKEUP | TU_BIT(7),
+                            500),
   };
 
   memcpy(_desc_cfg_buffer, dev_cfg, sizeof(tusb_desc_configuration_t));
