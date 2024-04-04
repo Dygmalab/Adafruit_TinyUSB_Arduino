@@ -59,36 +59,26 @@ extern "C" void USBD_IRQHandler(void) {
 
 static void usb_hardware_init(void);
 
-// USB Device Driver task
-// This top level thread process all usb events and invoke callbacks
-static void usb_device_task(void *param) {
-  (void)param;
+void TinyUSB_Device_Task(void) {
+  // Run tinyusb device task
+  tud_task();
+}
 
-  // Priorities 0, 1, 4 (nRF52) are reserved for SoftDevice
-  // 2 is highest for application
+void TinyUSB_Port_InitDevice(uint8_t rhport) {
+  (void)rhport;
   NVIC_SetPriority(USBD_IRQn, 2);
 
   tusb_init();
 
   usb_hardware_init();
 
-  // RTOS forever loop
-  while (1) {
-    tud_task();
-  }
-}
-
-void TinyUSB_Port_InitDevice(uint8_t rhport) {
-  (void)rhport;
-
   // Create a task for tinyusb device stack
-  xTaskCreate(usb_device_task, "usbd", USBD_STACK_SZ, NULL, TASK_PRIO_HIGH,
-              NULL);
+  //xTaskCreate(usb_device_task, "usbd", USBD_STACK_SZ, NULL, TASK_PRIO_HIGH,NULL);
 }
 
 void TinyUSB_Port_EnterDFU(void) {
   // Reset to Bootloader
-  enterSerialDfu();
+  //enterSerialDfu();
 }
 
 uint8_t TinyUSB_Port_GetSerialNumber(uint8_t serial_id[16]) {
