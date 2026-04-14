@@ -24,6 +24,7 @@
  * This file is part of the TinyUSB stack.
  */
 
+#include "dl_middleware.h"
 #include "tusb_option.h"
 
 #if CFG_TUD_ENABLED
@@ -492,6 +493,9 @@ void tud_task_ext(uint32_t timeout_ms, bool in_isr)
   {
     dcd_event_t event;
     if ( !osal_queue_receive(_usbd_q, &event, timeout_ms) ) return;
+
+    // Postpone the next sleep to let the USB events project into the whole program loop
+    mcu_sleep_postpone();
 
 #if CFG_TUSB_DEBUG >= 2
     if (event.event_id == DCD_EVENT_SETUP_RECEIVED) TU_LOG(USBD_DBG, "\r\n"); // extra line for setup
